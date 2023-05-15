@@ -1,0 +1,22 @@
+{
+  "name": "safetype",
+  "version": "1.0.0",
+  "description": "A browser plugin for safe typing - alarming on sensitive data being sent from the client",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "jest tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cyeragit/safetype-internal.git"
+  },
+  "author": "Cyera Ltd.",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/cyeragit/safetype-internal/issues"
+  },
+  "homepage": "https://github.com/cyeragit/safetype-internal#readme",
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+}

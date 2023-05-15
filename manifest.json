@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "SafeType by Cyera Labs",
+  "version": "1.1",
+  "description": "SafeType flags and removes sensitive data that you shouldn’t be sending on ChatGPT prompts.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_icon": "icons/icon48.png",
+    "default_popup": "settings/settings.html"
+  },
+  "permissions": ["activeTab"],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*"],
+      "matches": ["*://*.openai.com/*"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*.openai.com/*"],
+      "js": [
+        "src/styles.js",
+        "src/utils.js",
+        "src/handlers.js",
+        "src/browser-settings.js",
+        "src/validators.js",
+        "src/recognizers.js",
+        "src/classifier.js",
+        "src/elements.js",
+        "src/main.js"
+      ]
+    }
+  ]
+}

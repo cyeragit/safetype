@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cyera SafeType</title>
+    <style>
+      body {
+        height: 600px;
+        width: 400px;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .header {
+        background-color: #f7f7f7;
+        height: 48px;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        gap: 15px;
+        padding-right: 18px;
+        border-bottom: 1px solid #e7e7e7;
+        padding: 0px 16px;
+      }
+
+      .title {
+        font-size: 14px;
+        color: #585858;
+      }
+
+      .scrollable {
+        overflow-y: scroll;
+        max-height: 505px;
+      }
+
+      .settings,
+      .data-classes,
+      .contribution {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        margin: 24px;
+        gap: 16px;
+      }
+
+      .settings-title,
+      .data-classes-title,
+      .contribution-title {
+        font-size: 18px;
+      }
+
+      .settings-row,
+      .data-classes-description {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .contribution-description {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .settings-description,
+      .data-classes-description,
+      .contribution-description {
+        font-size: 14px;
+        color: #121212;
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 30px;
+        height: 17px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #b0b0b0;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: '';
+        height: 13px;
+        width: 13px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+      }
+
+      input:checked + .slider {
+        background-color: #121212;
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px #121212;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(13px);
+        -ms-transform: translateX(13px);
+        transform: translateX(13px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 17px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+
+      .github-link {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 14px;
+        color: #6275d7;
+        text-decoration: none;
+      }
+
+      .footer {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        border-top: 1px solid #e7e7e7;
+        cursor: pointer;
+      }
+
+      .footer-logo {
+        width: 28px;
+        height: 28px;
+        background: black;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .footer-text {
+        font-size: 14px;
+        color: #7b7b7b;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <img src="../assets/cyeraLogoAndName.svg" />
+    </div>
+    <div class="scrollable">
+      <div class="settings">
+        <div class="settings-title">Settings</div>
+        <div class="settings-row">
+          <div class="settings-description">
+            Check for sensitive data on this session
+          </div>
+          <label class="switch">
+            <input id="mainSafetypeChecked" type="checkbox" checked />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+      <div class="data-classes">
+        <div class="data-classes-title">Data Classes</div>
+        <div class="data-classes-description">
+          Detect and classify these data classes:
+        </div>
+      </div>
+      <div
+        id="dataClasses"
+        style="padding: 0px 24px; padding-bottom: 40px"
+      ></div>
+      <div class="contribution" style="margin: 0 24px">
+        <div class="contribution-title">Contribution</div>
+        <div class="contribution-description" style="padding-bottom: 36px">
+          <div>Contribute support for additional data classes</div>
+          <a
+            class="github-link"
+            href="https://github.com/cyeragit/safetype/"
+            target="_blank"
+          >
+            Github Contribution
+            <img src="../assets/githubArrow.svg" />
+          </a>
+        </div>
+      </div>
+    </div>
+    <a class="footer" href="https://www.cyera.io/solution" target="_blank">
+      <div class="footer-text">Learn more about classifications in Cyera</div>
+    </a>
+    <script src="../src/recognizers.js"></script>
+    <script src="settings.js"></script>
+  </body>
+</html>
