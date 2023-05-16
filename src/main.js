@@ -49,6 +49,20 @@ addedMainTooltip.id = 'safetypeMainTooltip';
 addedMainTooltip.style = getStyle(styles.mainTooltip);
 addedMainTooltip.innerHTML = safetypeMainTooltipHtml;
 
+const getNumIssues = () => {
+  if (page.codeFound.size > 0) {
+    return page.spans.length + 1;
+  }
+  return page.spans.length;
+};
+
+const getDisplayIndexOfSpan = () => {
+  if (page.codeFound.size > 0) {
+    return page.issueDisplayedIndex - 1;
+  }
+  return page.issueDisplayedIndex;
+};
+
 setInterval(() => {
   // if page not loaded yet
   if (document.getElementsByTagName('textarea').length !== 1) {
@@ -157,13 +171,13 @@ setInterval(() => {
       document.getElementById('shutDownBackButton').style.visibility = 'hidden';
       document.getElementById('aboutSafetypeMainTooltip').style.display =
         'flex';
-      if (page.spans.length > 1) {
+      if (getNumIssues() > 1) {
         document.getElementById('SafetypePagingParent').style.display = 'flex';
       } else {
         hide(['SafetypePagingParent']);
       }
       document.getElementById('SafetypePaging').innerHTML =
-        page.issueDisplayedIndex + 1 + ' of ' + page.spans.length;
+        page.issueDisplayedIndex + 1 + ' of ' + getNumIssues();
 
       // set the scroll to dipslay handler
       page.scrollToDisplayedIssue = handlers.getScrollDisplay(
@@ -173,8 +187,7 @@ setInterval(() => {
 
       // set paging buttons
       const backDisabled = page.issueDisplayedIndex === 0;
-      const forwardDisabled =
-        page.issueDisplayedIndex === page.spans.length - 1;
+      const forwardDisabled = page.issueDisplayedIndex === getNumIssues() - 1;
       document.getElementById('SafetypeBackDisabled').style.display =
         backDisabled ? 'block' : 'none';
       document.getElementById('SafetypeBackEnabled').style.display =
@@ -189,13 +202,13 @@ setInterval(() => {
         handlers.safetypePagingNext;
 
       // in case we have issues in the prompt show the counter
-      if (page.spansLocations.length > 0) {
+      if (getNumIssues() > 0) {
         document.getElementById('countSafetypeIssues').style.display = 'flex';
         hide(['wellDoneStatus']);
         document.getElementById('problemsStatus').style.display = 'block';
         page.issueDisplayedIndex = Math.max(
           0,
-          Math.min(page.issueDisplayedIndex, page.spans.length - 1)
+          Math.min(page.issueDisplayedIndex, getNumIssues() - 1)
         );
         document.getElementById('currentIssueText').innerHTML =
           page.spans[page.issueDisplayedIndex].innerText;
@@ -211,8 +224,7 @@ setInterval(() => {
         hide(['countSafetypeIssues', 'problemsStatus']);
         document.getElementById('wellDoneStatus').style.display = 'flex';
       }
-      document.getElementById('countSafetypeIssues').innerHTML =
-        page.spansLocations.length;
+      document.getElementById('countSafetypeIssues').innerHTML = getNumIssues();
     }
   }
 

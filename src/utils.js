@@ -32,15 +32,19 @@ function escapeHtml(str) {
 }
 
 function unescapeHtml(str) {
-  var htmlEntities = {
-    '&amp;': '&',
-    '&lt;': '<',
-    '&gt;': '>',
-    '&#x2F;': '/',
-  };
-
-  return str.replace(/&amp;|&lt;|&gt;|&#x2F;/g, function (match) {
-    return htmlEntities[match];
+  return str.replace(/(&amp;|&lt;|&gt;|&#x2F;)/g, function (char) {
+    switch (char) {
+      case '&amp;':
+        return '&';
+      case '&lt;':
+        return '<';
+      case '&gt;':
+        return '>';
+      case '&#x2F;':
+        return '/';
+      default:
+        return char;
+    }
   });
 }
 

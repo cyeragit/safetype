@@ -33,7 +33,7 @@ const handlers = {
     page.scrollToDisplayedIssue();
   },
   safetypePagingNext: () => {
-    if (page.issueDisplayedIndex < page.spans.length - 1) {
+    if (page.issueDisplayedIndex < getNumIssues() - 1) {
       page.issueDisplayedIndex += 1;
     }
     page.scrollToDisplayedIssue();
@@ -168,7 +168,7 @@ const handlers = {
     const relevantText = page.spans[page.issueDisplayedIndex].innerText;
     page.ignored.add(relevantText);
     page.spans = page.spans.filter((span) => span.innerText !== relevantText);
-    const newSpanSize = page.spans.length;
+    const newSpanSize = getNumIssues();
     if (page.issueDisplayedIndex >= newSpanSize - 1) {
       page.issueDisplayedIndex = newSpanSize - 1;
     }
@@ -195,7 +195,7 @@ const handlers = {
       );
       chatTooltip.style.display = 'none';
       page.spans = page.spans.filter((span) => span.innerText !== relevantText);
-      const newSpanSize = page.spans.length;
+      const newSpanSize = getNumIssues();
       if (page.issueDisplayedIndex >= newSpanSize - 1) {
         page.issueDisplayedIndex = newSpanSize - 1;
       }
