@@ -74,7 +74,7 @@ const safetypeMainTooltipHtml = `
             We Identified
             <div style="display: inline-flex;">
                 <div style="${getStyle(styles.dataTag)}">
-                    <div style="width: 8px; height: 8px; background: #18BFFF; border-radius: 2px;"></div>
+                    <div style="width: 8px; height: 8px; background: #7C39ED; border-radius: 2px;"></div>
                     <div id="currentCodeIssueDataType" style="${getStyle(
                       styles.tooltipCurrTitle
                     )}">Code</div>
