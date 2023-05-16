@@ -18,6 +18,9 @@ function classify(newText, supportedRecognizers, disabledTypes, ignored) {
     const regex = recognizer.positiveMatch;
     regex.lastIndex = 0;
     if (recognizer.kind === 'code') {
+      if (page.codeIgnored) {
+        continue;
+      }
       newText = unescapeHtml(newText);
     }
     const matches = [...newText.matchAll(regex)];
@@ -180,6 +183,7 @@ function wrappedClassify(newText) {
   const cacheKey = JSON.stringify({
     newText,
     disabledTypes,
+    codeIgnored: page.codeIgnored,
     ignored: Array.from(page.ignored),
   });
   if (classifyCache.lastKey === cacheKey) {
