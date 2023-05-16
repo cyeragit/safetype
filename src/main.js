@@ -12,6 +12,7 @@ let page = {
   ignored: new Set(),
   issueDisplayedIndex: 0,
   isLightMode: true,
+  codeFound: new Set(),
 };
 
 const pageConstants = {
@@ -245,7 +246,12 @@ setInterval(() => {
       const fixText = (text) => formatSpaces(text).replace(/\n/g, '<br>');
 
       const filteredMatches = wrappedClassify(newText);
+      page.codeFound = new Set();
       for (const match of filteredMatches) {
+        if (match.kind === 'code') {
+          page.codeFound.add(match.dataType);
+          continue;
+        }
         newTextParts.push(fixText(newText.slice(lastIndex, match.start)));
         const backgroundColor =
           page.markedTextHighlightedIndex === filteredMatches.indexOf(match)

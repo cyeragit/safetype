@@ -31,6 +31,19 @@ function escapeHtml(str) {
   });
 }
 
+function unescapeHtml(str) {
+  var htmlEntities = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&#x2F;': '/',
+  };
+
+  return str.replace(/&amp;|&lt;|&gt;|&#x2F;/g, function (match) {
+    return htmlEntities[match];
+  });
+}
+
 function replaceAll(str, search, replacement) {
   return str.replace(new RegExp(search, 'g'), replacement);
 }

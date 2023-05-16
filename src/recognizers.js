@@ -1,4 +1,5 @@
 const defaults = {
+  kind: 'personal', // 'personal' / 'security' / 'financial' / 'code'
   contextDelimiters: ['.', ';', '\n', '\r'],
   prevContextLength: 30,
   nextContextLength: 10,
@@ -7,6 +8,7 @@ const defaults = {
   displayRegexGroupId: 0,
   validationRegexGroupId: 0,
   filterRegexGroupId: 0,
+  minCount: 1, // relevant only for 'code' kind
 };
 
 if (typeof window === 'undefined') {
@@ -19,7 +21,7 @@ const supportedRecognizers = [
   // {
   //   ...defaults,
   //   name: 'Email Address',
-  //   kind : 'personal', // 'personal' / 'security' / 'financial' / 'code'
+  //   kind : 'personal',
   //
   //   // 1st
   //   positiveMatch: new RegExp(
@@ -64,20 +66,23 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Email Address',
-    kind: 'personal', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'personal',
 
     positiveMatch: new RegExp(
       `\\b(?:[+\\-_\\d]{1,15}_?|(?:recipient|to)[\\W_]+)?([+\\-\\w]{1,50}(?:\\.{1,5}[+\\-\\w]{1,50}){0,10}[@](?:\\w{1,30})(?:[-.]\\w{1,30}){0,2}\\.(?:com|gov|io|(?:co\\.)?[A-Za-z]{2,20}))\\w{0,20}\\b`,
       'gi'
     ),
     displayRegexGroupId: 1,
-    negativeFilter: new RegExp(`^[^@]@|@(?:[^\\.]\\.|(?:s|ex)ample\\.com\\b)`, 'gi'),
+    negativeFilter: new RegExp(
+      `^[^@]@|@(?:[^\\.]\\.|(?:s|ex)ample\\.com\\b)`,
+      'gi'
+    ),
     anonymous: 'john.doe@example.com',
   },
   {
     ...defaults,
     name: 'MAC Address',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       `\\b(?:[\\da-f]{2}([:-])[\\da-f]{2}(?:\\1[\\da-f]{2}){4}|[\\dA-F]{2}([:-])[\\dA-F]{2}(?:\\2[\\dA-F]{2}){4})(?!(?:\\1|\\2)[\\da-fA-F]{2})\\b`,
@@ -90,7 +95,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Public IP Address',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       `(?:\\b(?:2(?:[6-9]|5[0-5]?|[0-4]\\d?)?|1\\d{0,2}|[3-9]\\d?|0)(?:\\.(?:2(?:[6-9]|5[0-5]?|[0-4]\\d?)?|1\\d{0,2}|[3-9]\\d?|0)){3}|ip-(?:2(?:[6-9]|5[0-5]?|[0-4]\\d?)?|1\\d{0,2}|[3-9]\\d?|0)(?:-(?:2(?:[6-9]|5[0-5]?|[0-4]\\d?)?|1\\d{0,2}|[3-9]\\d?|0)){3})\\b|(?:\\b(?:[0-9a-fA-F]{1,4}:)(?:[0-9a-fA-F]{1,4}:){6}(?:[0-9a-fA-F]{1,4})|(?:(?:\\b[0-9a-fA-F]{1,4}(?::[0-9a-fA-F]{1,4}){0,5})?::(?:[0-9a-fA-F]{1,4}(?::[0-9a-fA-F]{1,4}){2,5})))\\b`,
@@ -105,7 +110,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'IBAN',
-    kind: 'financial', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'financial',
 
     positiveMatch: new RegExp(
       `\\b([A-Z]{2}[ \\-]?[0-9]{2})(?=(?:[ \\-]?[A-Z0-9]){9,30})((?:[ \\-]?[A-Z0-9]{3,5}){2,7})([ \\-]?[A-Z0-9]{1,3})?\\b`,
@@ -121,7 +126,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'DB Connection String',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       `(["']?)((?:(?:server|data.source|provider)=[^;]{1,50}; ?)(?:[^=;]{1,50}=[^;]{1,50}; ?){1,10}(?:[^=;]{1,50}=[^;\\s]{1,50};?))\\1`,
@@ -138,7 +143,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Password',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       `([\\"\\']?)(?:password|parole|kennwort|(?:\\b|_|^)(?:pwd|pass)(?:\\b|_|$))\\1[\\]]?(?:[ \\t]{0,10}(?:(?:is|was)(?:.?(?:updated|changed|set).?to)?|[=:\\-]+).?[ \\t]{0,10})(?:^|\\b|[\\s\\:\\-\\,\\_\\'\\"])([\\'\\"]?)([^\\s]{4,40}?)\\2?(?:$|[\\s\\:\\-\\,\\_\\'\\"])`,
@@ -154,7 +159,7 @@ const supportedRecognizers = [
   // {
   //   ...defaults,
   //   name: 'Password Permissive',
-  //   kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+  //   kind: 'security',
   //   positiveMatch: new RegExp(
   //     `(?:^|\\b|[\\s\\:\\-\\,\\_\\'\\"])([\\'\\"]?)([^\\s]{6,40})\\1?(?:$|[\\s\\:\\-\\,\\_\\'\\"])`,
   //     'gi'
@@ -179,7 +184,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Hashed Password',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       `(?:\\b|^)(?:(?:([\\$\\:]?)[^\\$]{1,7}[\\$\\:]){1,2}([a-z\\d/.]{31,240})|([a-f\\d]{32,240}))(?:\\b|$)`,
@@ -200,7 +205,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'HTTP Cookie',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       `((?:[^()<>@,;:\\\\\\"/[\\]?={}\\s]+)=(?:[^\\s,;\\"\\\\]{5,4096});?)`,
@@ -220,7 +225,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Bitcoin Address',
-    kind: 'financial', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'financial',
 
     positiveMatch: new RegExp(`\\b(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}\\b`, 'gi'),
     mustMatchPositiveContext: true,
@@ -230,7 +235,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'PGP Private Key',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       `-----BEGIN PGP PRIVATE KEY BLOCK-----(.|\\s)+?-----END PGP PRIVATE KEY BLOCK-----`,
@@ -241,7 +246,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'SSH Putty Private Key',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       `PuTTY-User-Key-File-[^\:]{1,20}:[^\r\n]{1,50}\nEncryption:`,
@@ -252,7 +257,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'RSA Private Key',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       `-----BEGIN RSA PRIVATE KEY-----[A-Za-z\\d\/+=\\s]{2,}-----END RSA PRIVATE KEY-----`,
@@ -263,7 +268,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'DSA Private Key',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       `-----BEGIN DSA PRIVATE KEY-----[A-Za-z\\d\/+=\\s]{2,}-----END DSA PRIVATE KEY-----`,
@@ -274,7 +279,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'ECDSA Private Key',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       `-----BEGIN EC PRIVATE KEY-----[A-Za-z\\d\/+=\\s]{2,}-----END EC PRIVATE KEY-----`,
@@ -285,7 +290,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'SSH Private Key',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
     // "b3BlbnNzaC1rZXktdjE" == base64.b64encode(b"openssh-key-v1").decode().rstrip("=")
     positiveMatch: new RegExp(
       `-----BEGIN OPENSSH PRIVATE KEY-----[A-Za-z\\d\/+=\\s]{2,}-----END OPENSSH PRIVATE KEY-----|b3BlbnNzaC1rZXktdjE[A-Za-z\d\/+=\s]*`,
@@ -296,7 +301,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'PEM Private Key',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       `-----BEGIN ((?:[A-Z]+ )?)PRIVATE KEY-----[A-Za-z\\d\/+=\\s]{2,}-----END \\1PRIVATE KEY-----`,
@@ -307,7 +312,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'AWS Secret Key',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(
       // `(?<![a-z\\d/+=])([a-z\\d/+=]{40})(?![a-z\\d/+=])`,
@@ -334,7 +339,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Access Key',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
     positiveMatch: new RegExp(`(?:\\b|_)([a-z\\d/+=]{10,})(?:\\b|_)`, 'gi'),
     negativeFilter: new RegExp(`^(?:[^\\d]+|[^a-z]+)$`, 'gi'),
     displayRegexGroupId: 1,
@@ -347,7 +352,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Private Key',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(`(?:\\b|_)([a-z\\d/+=]{10,})(?:\\b|_)`, 'gi'),
     negativeFilter: new RegExp(`^(?:[^\\d]+|[^a-z]+)$`, 'gi'),
@@ -364,7 +369,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Access Token',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(`[\\w!@#$%^&*()\\-]{6,126}`, 'gi'),
     negativeFilter: new RegExp(`^(?:[A-Za-z]{8,16}|[^\\d]+)$`, 'gi'),
@@ -380,7 +385,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Refresh Token',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(`[\\w!@#$%^&*()\\-]{6,126}`, 'gi'),
     negativeFilter: new RegExp(`^(?:[A-Za-z]{8,16}|[^\\d]+)$`, 'gi'),
@@ -396,7 +401,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Password Reset Token',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(`[\\w!@#$%^&*()\\-]{6,126}`, 'gi'),
     negativeFilter: new RegExp(`^(?:[A-Za-z]{8,16}|[^\\d]+)$`, 'gi'),
@@ -416,7 +421,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Session Token',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(`[\\w!@#$%^&*()\\-]{6,126}`, 'gi'),
     negativeFilter: new RegExp(`^(?:[A-Za-z]{8,16}|[^\\d]+)$`, 'gi'),
@@ -432,7 +437,7 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Token',
-    kind: 'security', // 'personal' / 'security' / 'financial' / 'code'
+    kind: 'security',
 
     positiveMatch: new RegExp(`[\\w!@#$%^&*()\\-]{6,126}`, 'gi'),
     negativeFilter: new RegExp(`^(?:[A-Za-z]{8,16}|[^\\d]+)$`, 'gi'),
@@ -444,6 +449,16 @@ const supportedRecognizers = [
       'gi'
     ),
     anonymous: 'MyToken',
+  },
+  {
+    ...defaults,
+    name: 'Javascript Code',
+    kind: 'code',
+    minCount: 2,
+    positiveMatch: new RegExp(
+      '([a-zA-Z$_][a-zA-Z0-9$_]*)\\s*=\\s*\\([^)]*\\)\\s*=>',
+      'gi'
+    ),
   },
 ];
 if (typeof window === 'undefined') {

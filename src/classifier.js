@@ -17,7 +17,17 @@ function classify(newText, supportedRecognizers, disabledTypes, ignored) {
     }
     const regex = recognizer.positiveMatch;
     regex.lastIndex = 0;
+    if (recognizer.kind === 'code') {
+      newText = unescapeHtml(newText);
+    }
     const matches = [...newText.matchAll(regex)];
+
+    if (
+      recognizer.minCount !== undefined &&
+      matches.length < recognizer.minCount
+    ) {
+      continue;
+    }
 
     for (const match of matches) {
       if (
@@ -133,6 +143,7 @@ function classify(newText, supportedRecognizers, disabledTypes, ignored) {
         matchesArray.push({
           start,
           end,
+          kind: recognizer.kind,
           dataType: recognizer.name,
           value: matchedString,
         });
