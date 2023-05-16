@@ -13,6 +13,7 @@ test('Email address classify', () => {
   ).toStrictEqual([
     {
       dataType: 'Email Address',
+      kind: 'personal',
       start: 0,
       end: 12,
       value: 'abc@cyera.io',
@@ -30,6 +31,7 @@ test('Email Address long classify', () => {
   ).toStrictEqual([
     {
       dataType: 'Email Address',
+      kind: 'personal',
       start: 8,
       end: 57,
       value: 'abjsdkdadwadwlajsdlkjaldiwiadwj37829173@gmail.com',
@@ -37,14 +39,9 @@ test('Email Address long classify', () => {
   ]);
 });
 test('Email Address too short classify', () => {
-  expect(
-    classify(
-      'd@d.df',
-      supportedRecognizers,
-      [],
-      new Set()
-    )
-  ).toStrictEqual([]);
+  expect(classify('d@d.df', supportedRecognizers, [], new Set())).toStrictEqual(
+    []
+  );
 });
 test('MAC Address classify', () => {
   expect(
@@ -52,6 +49,7 @@ test('MAC Address classify', () => {
   ).toStrictEqual([
     {
       dataType: 'MAC Address',
+      kind: 'security',
       start: 0,
       end: 17,
       value: 'c3:ab:5a:ff:ad:7f',
@@ -69,6 +67,7 @@ test('IP Address classify', () => {
   ).toStrictEqual([
     {
       dataType: 'Public IP Address',
+      kind: 'personal',
       start: 0,
       end: 12,
       value: '190.17.15.48',
@@ -81,6 +80,7 @@ test('IBAN classify', () => {
   ).toStrictEqual([
     {
       dataType: 'IBAN',
+      kind: 'financial',
       start: 0,
       end: 24,
       value: 'SE8850000000058151024062',
@@ -98,6 +98,7 @@ test('DB Connection String classify', () => {
   ).toStrictEqual([
     {
       dataType: 'DB Connection String',
+      kind: 'security',
       start: 9,
       end: 121,
       value:
@@ -117,11 +118,12 @@ test('DB Connection String classify 2', () => {
   ).toStrictEqual([
     {
       dataType: 'DB Connection String',
+      kind: 'security',
       start: 19,
       end: 124,
       value:
         'Provider=SQLOLEDB;Data Source=servername;User ID=dbuser;Password=dbpassword;Initial\n' +
-          '    Catalog=database;',
+        '    Catalog=database;',
     },
   ]);
 });
@@ -136,6 +138,7 @@ test('Password classify', () => {
   ).toStrictEqual([
     {
       dataType: 'Password',
+      kind: 'security',
       start: 16,
       end: 28,
       value: '12341sdakl04',
@@ -153,6 +156,7 @@ test('Password classify 2', () => {
   ).toStrictEqual([
     {
       dataType: 'Password',
+      kind: 'security',
       start: 21,
       end: 31,
       value: 'ashdjk235j',
@@ -161,15 +165,11 @@ test('Password classify 2', () => {
 });
 test('Password classify exact matching', () => {
   expect(
-    classify(
-      '"password": "Godke435@!"  ',
-      supportedRecognizers,
-      [],
-      new Set()
-    )
+    classify('"password": "Godke435@!"  ', supportedRecognizers, [], new Set())
   ).toStrictEqual([
     {
       dataType: 'Password',
+      kind: 'security',
       start: 13,
       end: 23,
       value: 'Godke435@!',
@@ -178,12 +178,7 @@ test('Password classify exact matching', () => {
 });
 test('Password classify FP', () => {
   expect(
-    classify(
-      'Your password can7 be',
-      supportedRecognizers,
-      [],
-      new Set()
-    )
+    classify('Your password can7 be', supportedRecognizers, [], new Set())
   ).toStrictEqual([]);
 });
 test('Password classify FP 2', () => {
@@ -217,6 +212,7 @@ test('Hashed Password classify', () => {
   ).toStrictEqual([
     {
       dataType: 'Hashed Password',
+      kind: 'security',
       start: 21,
       end: 85,
       value: '40e75cf3dc081733079576b5498af7bce02e8608b3a19b48f5851d24d2f62218',
@@ -234,6 +230,7 @@ test('Hashed Password FN classify', () => {
   ).toStrictEqual([
     {
       dataType: 'Hashed Password',
+      kind: 'security',
       start: 22,
       end: 86,
       value: '40e75cf3dc081733079576b5498af7bce02e8608b3a19b48f5851d24d2f62218',
@@ -251,6 +248,7 @@ test('HTTP Cookie classify', () => {
   ).toStrictEqual([
     {
       dataType: 'HTTP Cookie',
+      kind: 'security',
       start: 12,
       end: 21,
       value: 'id=a3fWa;',
@@ -268,6 +266,7 @@ test('Bitcoin Address classify', () => {
   ).toStrictEqual([
     {
       dataType: 'Bitcoin Address',
+      kind: 'financial',
       start: 8,
       end: 42,
       value: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
@@ -285,6 +284,7 @@ test('AWS Secret Key classify', () => {
   ).toStrictEqual([
     {
       dataType: 'AWS Secret Key',
+      kind: 'security',
       start: 15,
       end: 55,
       value: 'XFjRDv53Lx9xbxJ3dNQ5YFCoNQVXu9f7rd0WGFpg',
@@ -633,14 +633,14 @@ test('Password in DB Connection String classify', () => {
       dataType: 'Password',
       start: 64,
       end: 71,
-      value: "pa12331", // Fix match
+      value: 'pa12331', // Fix match
     },
   ]);
 });
 test('Password in DB connection string classify 2', () => {
   expect(
     classify(
-      'conn = pymysql.connect(host=\'localhost\', user=\'root\', password=\'password1\', database=\'database\')',
+      "conn = pymysql.connect(host='localhost', user='root', password='password1', database='database')",
       supportedRecognizers,
       ['DB Connection String'],
       new Set()
@@ -650,8 +650,7 @@ test('Password in DB connection string classify 2', () => {
       dataType: 'Password',
       start: 64,
       end: 73,
-      value:
-        'password1',
+      value: 'password1',
     },
   ]);
 });
@@ -705,7 +704,7 @@ test('Email Address and Password classify FN', () => {
 test('General Classify FP', () => {
   expect(
     classify(
-      'I just finished a long day at work and can\'t wait to relax. My password is lost, but please don\'t tell anyone.',
+      "I just finished a long day at work and can't wait to relax. My password is lost, but please don't tell anyone.",
       supportedRecognizers,
       [],
       new Set()

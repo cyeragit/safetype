@@ -327,5 +327,6 @@ if (typeof window === 'undefined') {
   module.exports = {
     sliceStringFromLastDelimiter,
     sliceStringUpToFirstDelimiter,
+    unescapeHtml,
   };
 }
