@@ -165,6 +165,10 @@ const handlers = {
     };
   },
   ignoreFromMain: () => {
+    if (page.codeFound.size > 0 && getDisplayIndexOfSpan() === -1) {
+      page.codeIgnored = true;
+      return;
+    }
     const relevantText = page.spans[getDisplayIndexOfSpan()].innerText;
     page.ignored.add(relevantText);
     page.spans = page.spans.filter((span) => span.innerText !== relevantText);

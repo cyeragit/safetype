@@ -13,6 +13,7 @@ let page = {
   issueDisplayedIndex: 0,
   isLightMode: true,
   codeFound: new Set(),
+  codeIgnored: false,
 };
 
 const pageConstants = {
@@ -210,22 +211,35 @@ setInterval(() => {
           0,
           Math.min(page.issueDisplayedIndex, getNumIssues() - 1)
         );
-        document.getElementById('currentIssueText').innerHTML =
-          getDisplayIndexOfSpan() === -1
-            ? 'This is code!'
-            : page.spans[getDisplayIndexOfSpan()].innerText;
-        document.getElementById('currentIssueDataType').innerHTML =
-          getDisplayIndexOfSpan() === -1
-            ? 'Code'
-            : page.spans[getDisplayIndexOfSpan()].getAttribute('data-type');
-        if (
-          document.getElementById('safetypeMainTooltip').style.display !==
-          'none'
-        ) {
-          page.markedTextHighlightedIndex =
-            page.codeFound.size > 0
-              ? page.issueDisplayedIndex - 1
-              : page.issueDisplayedIndex;
+        if (page.codeFound.size > 0 && page.issueDisplayedIndex === 0) {
+          // show code found
+          document.getElementById('currentIssueText').innerHTML =
+            'this is code!';
+          hide(['anonymizeButtonOnMain']);
+          hide(['regularIssueDescribe', 'regularIssueDataType']);
+          page.markedTextHighlightedIndex = -1;
+          document.getElementById('codeIssueDescribe').style.display = 'block';
+        } else {
+          document.getElementById('currentIssueText').innerHTML =
+            page.spans[getDisplayIndexOfSpan()].innerText;
+          document.getElementById('currentIssueDataType').innerHTML =
+            page.spans[getDisplayIndexOfSpan()].getAttribute('data-type');
+          document.getElementById('anonymizeButtonOnMain').style.display =
+            'block';
+          document.getElementById('regularIssueDescribe').style.display =
+            'initial';
+          document.getElementById('regularIssueDataType').style.display =
+            'inline-flex';
+          hide(['codeIssueDescribe']);
+          if (
+            document.getElementById('safetypeMainTooltip').style.display !==
+            'none'
+          ) {
+            page.markedTextHighlightedIndex =
+              page.codeFound.size > 0
+                ? page.issueDisplayedIndex - 1
+                : page.issueDisplayedIndex;
+          }
         }
       } else {
         hide(['countSafetypeIssues', 'problemsStatus']);
