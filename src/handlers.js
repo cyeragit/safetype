@@ -169,7 +169,6 @@ const handlers = {
     page.ignored.add(relevantText);
     page.spans = page.spans.filter((span) => span.innerText !== relevantText);
     const newSpanSize = getNumIssues();
-    // TBD - fix this for code!!!!
     if (page.issueDisplayedIndex >= newSpanSize - 1) {
       page.issueDisplayedIndex = newSpanSize - 1;
     }

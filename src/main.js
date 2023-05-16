@@ -222,7 +222,10 @@ setInterval(() => {
           document.getElementById('safetypeMainTooltip').style.display !==
           'none'
         ) {
-          page.markedTextHighlightedIndex = page.issueDisplayedIndex;
+          page.markedTextHighlightedIndex =
+            page.codeFound.size > 0
+              ? page.issueDisplayedIndex - 1
+              : page.issueDisplayedIndex;
         }
       } else {
         hide(['countSafetypeIssues', 'problemsStatus']);
