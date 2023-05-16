@@ -144,31 +144,32 @@ const handlers = {
   },
   getScrollDisplay: (chatTextarea, chatOverlay) => {
     return () => {
-      if (!page.spansLocations[page.issueDisplayedIndex]) {
+      if (!page.spansLocations[getDisplayIndexOfSpan()]) {
         return;
       }
-      chatTextarea.scrollTop = page.spansLocations[page.issueDisplayedIndex].y;
+      chatTextarea.scrollTop = page.spansLocations[getDisplayIndexOfSpan()].y;
       const myTextareaRect = chatTextarea.getBoundingClientRect();
       if (
-        page.spansLocations[page.issueDisplayedIndex].x < myTextareaRect.width
+        page.spansLocations[getDisplayIndexOfSpan()].x < myTextareaRect.width
       ) {
         chatTextarea.scrollLeft = 0;
       } else if (
-        page.spansLocations[page.issueDisplayedIndex].x > myTextareaRect.width
+        page.spansLocations[getDisplayIndexOfSpan()].x > myTextareaRect.width
       ) {
         chatTextarea.scrollLeft =
-          page.spansLocations[page.issueDisplayedIndex].x;
+          page.spansLocations[getDisplayIndexOfSpan()].x;
       }
-      chatTextarea.scrollLeft = page.spansLocations[page.issueDisplayedIndex].x;
+      chatTextarea.scrollLeft = page.spansLocations[getDisplayIndexOfSpan()].x;
       chatOverlay.scrollTop = chatTextarea.scrollTop;
       chatOverlay.scrollLeft = chatTextarea.scrollLeft;
     };
   },
   ignoreFromMain: () => {
-    const relevantText = page.spans[page.issueDisplayedIndex].innerText;
+    const relevantText = page.spans[getDisplayIndexOfSpan()].innerText;
     page.ignored.add(relevantText);
     page.spans = page.spans.filter((span) => span.innerText !== relevantText);
     const newSpanSize = getNumIssues();
+    // TBD - fix this for code!!!!
     if (page.issueDisplayedIndex >= newSpanSize - 1) {
       page.issueDisplayedIndex = newSpanSize - 1;
     }
@@ -178,8 +179,8 @@ const handlers = {
   },
   getAnonymizeFromMain: (chatTextarea, chatTooltip) => {
     return () => {
-      const relevantSpan = page.spans[page.issueDisplayedIndex];
-      const relevantText = page.spans[page.issueDisplayedIndex].innerText;
+      const relevantSpan = page.spans[getDisplayIndexOfSpan()];
+      const relevantText = page.spans[getDisplayIndexOfSpan()].innerText;
       const relevantRegex = supportedRecognizers.find(
         (regexType) => regexType.name === relevantSpan.getAttribute('data-type')
       );

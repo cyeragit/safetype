@@ -211,9 +211,13 @@ setInterval(() => {
           Math.min(page.issueDisplayedIndex, getNumIssues() - 1)
         );
         document.getElementById('currentIssueText').innerHTML =
-          page.spans[page.issueDisplayedIndex].innerText;
+          getDisplayIndexOfSpan() === -1
+            ? 'This is code!'
+            : page.spans[getDisplayIndexOfSpan()].innerText;
         document.getElementById('currentIssueDataType').innerHTML =
-          page.spans[page.issueDisplayedIndex].getAttribute('data-type');
+          getDisplayIndexOfSpan() === -1
+            ? 'Code'
+            : page.spans[getDisplayIndexOfSpan()].getAttribute('data-type');
         if (
           document.getElementById('safetypeMainTooltip').style.display !==
           'none'
