@@ -14,14 +14,15 @@ const reg_import = new RegExp (`^(from [\\w.]+ )?import ${var_names.source}${end
 const reg_func = new RegExp (`${start_line.source}def \\w+\\(${statement.source}?\\)( *-> *[\\w.\\[\\]:]+)?:${end_line.source}`, 'mg');
 const reg_return = new RegExp (`${start_line.source}(return|yeild)( ${statement.source})?${end_line.source}`, 'mg');
 const reg_cond = new RegExp (`${start_line.source}(if|elif|for|while) *${statement.source}:${end_line.source}`, 'mg');
+const reg_else = new RegExp (`${start_line.source}}else *:${end_line.source}`, 'mg');
 const reg_assign = new RegExp (`${start_line.source}${var_name.source}${assign.source}${statement.source}${end_line.source}`, 'mg');
 const reg_call = new RegExp (`${start_line.source}${var_name.source}\\(${statement.source}?\\)${end_line.source}`, 'mg');
 const reg_class = new RegExp (`${start_line.source}class \\w+(\\(${var_name.source}\\))?:${end_line.source}`, 'mg');
-const reg_break = new RegExp (`${start_line.source}break${end_line.source}`, 'mg');
+const reg_break = new RegExp (`${start_line.source}(break|continue)${end_line.source}`, 'mg');
 const reg_comment = new RegExp (`${start_line.source}${multi_comment.source}${end_line.source}`, 'mg');
 const reg_empty_line = new RegExp (`${start_line.source}${simple_comment.source}?\n`, 'mg');
 
-const python_patterns = [reg_import, reg_func, reg_return, reg_cond, reg_assign, reg_call, reg_class, reg_break, reg_comment, reg_empty_line];
+const python_patterns = [reg_import, reg_func, reg_return, reg_cond, reg_else, reg_assign, reg_call, reg_class, reg_break, reg_comment, reg_empty_line];
 
 const simple_comment_js = /(\/\/.*)/;
 const start_line_js = /^[ \t]*/;
@@ -39,7 +40,7 @@ const reg_else_js = new RegExp (`${start_line_js.source}}(} *)?else( *{)?${end_l
 const reg_assign_js = new RegExp (`${start_line_js.source}(${export_js.source}?${var_js.source})?${var_name.source}${assign.source}${statement_js.source};${end_line_js.source}`, 'mg');
 const reg_call_js = new RegExp (`${start_line_js.source}${var_name.source}\\(${statement_js.source}?\\) *;${end_line_js.source}`, 'mg');
 const reg_class_js = new RegExp (`${start_line_js.source}class \\w+ *{${end_line_js.source}`, 'mg');
-const reg_break_js = new RegExp (`${start_line_js.source}break;${end_line_js.source}`, 'mg');
+const reg_break_js = new RegExp (`${start_line_js.source}(break|continue);${end_line_js.source}`, 'mg');
 const reg_comment_js = new RegExp (`${start_line_js.source}${multi_comment_js.source}${end_line_js.source}`, 'mg');
 const reg_empty_line_js = new RegExp (`${start_line_js.source}[{}]?${simple_comment_js.source}?\n`, 'mg');
 
