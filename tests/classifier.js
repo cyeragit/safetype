@@ -15,6 +15,7 @@ test('Email address classify', () => {
       dataType: 'Email Address',
       start: 0,
       end: 12,
+      kind: "personal",
       value: 'abc@cyera.io',
     },
   ]);
@@ -32,6 +33,7 @@ test('Email Address long classify', () => {
       dataType: 'Email Address',
       start: 8,
       end: 57,
+      kind: "personal",
       value: 'abjsdkdadwadwlajsdlkjaldiwiadwj37829173@gmail.com',
     },
   ]);
@@ -54,6 +56,7 @@ test('MAC Address classify', () => {
       dataType: 'MAC Address',
       start: 0,
       end: 17,
+      kind: "security",
       value: 'c3:ab:5a:ff:ad:7f',
     },
   ]);
@@ -71,6 +74,7 @@ test('IP Address classify', () => {
       dataType: 'Public IP Address',
       start: 0,
       end: 12,
+      kind: "security",
       value: '190.17.15.48',
     },
   ]);
@@ -83,6 +87,7 @@ test('IBAN classify', () => {
       dataType: 'IBAN',
       start: 0,
       end: 24,
+      kind: "financial",
       value: 'SE8850000000058151024062',
     },
   ]);
@@ -100,6 +105,7 @@ test('DB Connection String classify', () => {
       dataType: 'DB Connection String',
       start: 9,
       end: 121,
+      kind: "security",
       value:
         'Provider=sqloledb;Data Source=myServerAddress;Initial Catalog=myDataBase;User Id=myUsername;Password=myPassword;',
     },
@@ -119,6 +125,7 @@ test('DB Connection String classify 2', () => {
       dataType: 'DB Connection String',
       start: 19,
       end: 124,
+      kind: "security",
       value:
         'Provider=SQLOLEDB;Data Source=servername;User ID=dbuser;Password=dbpassword;Initial\n' +
           '    Catalog=database;',
@@ -138,6 +145,7 @@ test('Password classify', () => {
       dataType: 'Password',
       start: 16,
       end: 28,
+      kind: "security",
       value: '12341sdakl04',
     },
   ]);
@@ -155,6 +163,7 @@ test('Password classify 2', () => {
       dataType: 'Password',
       start: 21,
       end: 31,
+      kind: "security",
       value: 'ashdjk235j',
     },
   ]);
@@ -172,6 +181,7 @@ test('Password classify exact matching', () => {
       dataType: 'Password',
       start: 13,
       end: 23,
+      kind: "security",
       value: 'Godke435@!',
     },
   ]);
@@ -219,6 +229,7 @@ test('Hashed Password classify', () => {
       dataType: 'Hashed Password',
       start: 21,
       end: 85,
+      kind: "security",
       value: '40e75cf3dc081733079576b5498af7bce02e8608b3a19b48f5851d24d2f62218',
     },
   ]);
@@ -236,6 +247,7 @@ test('Hashed Password FN classify', () => {
       dataType: 'Hashed Password',
       start: 22,
       end: 86,
+      kind: "security",
       value: '40e75cf3dc081733079576b5498af7bce02e8608b3a19b48f5851d24d2f62218',
     },
   ]);
@@ -253,6 +265,7 @@ test('HTTP Cookie classify', () => {
       dataType: 'HTTP Cookie',
       start: 12,
       end: 21,
+      kind: "security",
       value: 'id=a3fWa;',
     },
   ]);
@@ -270,6 +283,7 @@ test('Bitcoin Address classify', () => {
       dataType: 'Bitcoin Address',
       start: 8,
       end: 42,
+      kind: "financial",
       value: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
     },
   ]);
@@ -287,6 +301,7 @@ test('AWS Secret Key classify', () => {
       dataType: 'AWS Secret Key',
       start: 15,
       end: 55,
+      kind: "security",
       value: 'XFjRDv53Lx9xbxJ3dNQ5YFCoNQVXu9f7rd0WGFpg',
     },
   ]);
@@ -310,6 +325,7 @@ test('PGP Private Key classify', () => {
       dataType: 'PGP Private Key',
       start: 0,
       end: 228,
+      kind: "security",
       value:
         '-----BEGIN PGP PRIVATE KEY BLOCK-----\n' +
         'Version: GnuPG v1\n' +
@@ -358,6 +374,7 @@ test('SSH Putty Private Key classify', () => {
       dataType: 'SSH Putty Private Key',
       start: 0,
       end: 42,
+      kind: "security",
       value: 'PuTTY-User-Key-File-3: ssh-dss\n' + 'Encryption:',
     },
   ]);
@@ -379,6 +396,7 @@ test('RSA Private Key classify', () => {
       dataType: 'RSA Private Key',
       start: 0,
       end: 248,
+      kind: "security",
       value:
         '-----BEGIN RSA PRIVATE KEY-----\n' +
         'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgiYydo27aNGO9DBUW\n' +
@@ -405,6 +423,7 @@ test('DSA Private Key classify', () => {
       dataType: 'DSA Private Key',
       start: 0,
       end: 264,
+      kind: "security",
       value:
         '-----BEGIN DSA PRIVATE KEY-----\n' +
         '    MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgiYydo27aNGO9DBUW\n' +
@@ -431,6 +450,7 @@ test('ECDSA Private Key classify', () => {
       dataType: 'ECDSA Private Key',
       start: 0,
       end: 262,
+      kind: "security",
       value:
         '-----BEGIN EC PRIVATE KEY-----\n' +
         '    MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgiYydo27aNGO9DBUW\n' +
@@ -461,6 +481,7 @@ test('SSH Private Key classify', () => {
       dataType: 'SSH Private Key',
       start: 0,
       end: 504,
+      kind: "security",
       value:
         '-----BEGIN OPENSSH PRIVATE KEY-----\n' +
         'b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAaAAAABNlY2RzYS\n' +
@@ -491,6 +512,7 @@ test('PEM Private Key classify', () => {
       dataType: 'PEM Private Key',
       start: 0,
       end: 240,
+      kind: "security",
       value:
         '-----BEGIN PRIVATE KEY-----\n' +
         'MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgiYydo27aNGO9DBUW\n' +
@@ -513,6 +535,7 @@ test('Access Key classify', () => {
       dataType: 'Access Key',
       start: 18,
       end: 58,
+      kind: "security",
       value: '0B836276FB2D45E650DA0B836276FB2D45E650DA',
     },
   ]);
@@ -530,6 +553,7 @@ test('Private Key classify', () => {
       dataType: 'Private Key',
       start: 19,
       end: 39,
+      kind: "security",
       value: 'B00684A2E1CA0B75CD42',
     },
   ]);
@@ -547,6 +571,7 @@ test('Access Token classify', () => {
       dataType: 'Access Token',
       start: 20,
       end: 51,
+      kind: "security",
       value: 'S2PCJSWXPD15rVnx1WWtFY4rSuZhU4R',
     },
   ]);
@@ -564,6 +589,7 @@ test('Refresh Token classify', () => {
       dataType: 'Refresh Token',
       start: 13,
       end: 45,
+      kind: "security",
       value: 'SxQR38Khxm5sAgVLV367ms85LHSLuEuM',
     },
   ]);
@@ -581,6 +607,7 @@ test('Password Reset Token classify', () => {
       dataType: 'Password Reset Token',
       start: 34,
       end: 54,
+      kind: "security",
       value: 'sT_ZQnmdEPCiPja8zVx2',
     },
   ]);
@@ -598,6 +625,7 @@ test('Session Token classify', () => {
       dataType: 'Session Token',
       start: 15,
       end: 55,
+      kind: "security",
       value: 'session_c1b50017ce25dd378c5c8fc4fcee25e2',
     },
   ]);
@@ -615,6 +643,7 @@ test('Token classify', () => {
       dataType: 'Token',
       start: 56,
       end: 77,
+      kind: "security",
       value: 'e5c2d9bd904273cb3b9ad',
     },
   ]);
@@ -637,6 +666,7 @@ test('Python Code classify', () => {
       dataType: 'Python Code',
       start: 0,
       end: 83,
+      kind: "code",
       value: 
       'i = 1\n' +
       'while i < 6:\n' +
@@ -667,6 +697,7 @@ test('Python Code classify', () => {
       dataType: 'Python Code',
       start: 0,
       end: 185,
+      kind: "code",
       value: 
       'def tri_recursion(k):\n' +
       '  if(k > 0):\n' +
@@ -699,6 +730,7 @@ test('Python Code classify', () => {
       dataType: 'Python Code',
       start: 0,
       end: 174,
+      kind: "code",
       value: 
       'n = int(input())  # input() function takes input as string type\n' +
       '# int() converts it to integer type\n' +
@@ -727,6 +759,7 @@ test('Python Code classify', () => {
       dataType: 'Python Code',
       start: 0,
       end: 108,
+      kind: "code",
       value: 
       'def detect(text: str, patterns: list[Pattern]):\n'+
       '    spans = []\n'+
@@ -754,6 +787,7 @@ test('Javascript Code classify', () => {
       dataType: 'JavaScript Code',
       start: 0,
       end: 93,
+      kind: "code",
       value: 
       'function toCelsius(fahrenheit) {\n' +
       '  return (5/9) * (fahrenheit-32);\n' +
@@ -789,6 +823,7 @@ test('Javascript Code classify', () => {
       dataType: 'JavaScript Code',
       start: 0,
       end: 317,
+      kind: "code",
       value: 
       'class Car {\n' +
       '  constructor(name, year) {\n' +
@@ -825,6 +860,7 @@ test('Javascript Code classify', () => {
       dataType: 'JavaScript Code',
       start: 0,
       end: 102,
+      kind: "code",
       value: 
       'let i = 2;\n' +
       'let len = cars.length;\n' +
@@ -849,6 +885,7 @@ test('Password in DB Connection String classify', () => {
       dataType: 'Password',
       start: 64,
       end: 71,
+      kind: "security",
       value: "pa12331", // Fix match
     },
   ]);
@@ -866,6 +903,7 @@ test('Password in DB connection string classify 2', () => {
       dataType: 'Password',
       start: 64,
       end: 73,
+      kind: "security",
       value:
         'password1',
     },
@@ -884,12 +922,14 @@ test('Email Address and Password classify', () => {
       dataType: 'Email Address',
       start: 12,
       end: 36,
+      kind: "personal",
       value: 'singing.pisga4@gmail.com',
     },
     {
       dataType: 'Password',
       start: 56,
       end: 62,
+      kind: "security",
       value: 'TT%3s8',
     },
   ]);
@@ -907,6 +947,7 @@ test('Email Address and Password classify FN', () => {
       dataType: 'Email Address',
       start: 25,
       end: 39,
+      kind: "personal",
       value: 'blud@gmail.com',
     },
     // Password FN

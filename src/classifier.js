@@ -18,10 +18,10 @@ function classify(newText, supportedRecognizers, disabledTypes, ignored) {
     const regex = recognizer.positiveMatch;
     regex.lastIndex = 0;
     if (recognizer.kind === 'code') {
-      if (page.codeIgnored) {
-        continue;
-      }
-      newText = unescapeHtml(newText);
+      // if (page.codeIgnored) {
+      //   continue;
+      // }
+      // newText = unescapeHtml(newText);
     }
     const matches = [...newText.matchAll(regex)];
 
