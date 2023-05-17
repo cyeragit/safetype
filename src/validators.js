@@ -1,13 +1,16 @@
+//common
 const THRESHOLD = 0.6;
 const MIN_MATCHES = 4;
 
+const name = /([\w.]+)/;
+const names = /([\w.]+)(, ?[\w.]+)*/;
+const var_name = /(\w(\w|\.\w)*(\[.*\](.\w(\w|\.\w)*)?)?)/;
+
+//python
 const simple_comment = /(#.*)/;
 const start_line = /^( |\t)*/;
 const multi_comment = /('''(.|[\r\n])*?'''|"""(.|[\r\n])*?""")/;
 const end_line = /(( |\t)*(#.*)?)$/;
-const name = /([\w.]+)/;
-const names = /([\w.]+)(, ?[\w.]+)*/;
-const var_name = /(\w(\w|\.\w)*(\[.*\](.\w(\w|\.\w)*)?)?)/;
 const statement = /(.+?)/;
 const assign = / *[+\-*\/]?= */;
 
@@ -25,13 +28,14 @@ const reg_empty_line = new RegExp (`${start_line.source}${simple_comment.source}
 
 const python_patterns = [reg_import, reg_func, reg_return, reg_cond, reg_else, reg_assign, reg_call, reg_class, reg_break, reg_comment, reg_empty_line];
 
+//javascript
 const simple_comment_js = /(\/\/.*)/;
 const start_line_js = /^[ \t]*/;
 const multi_comment_js = /(\/\*(.|[\r\n])*?\*\/)/;
 const end_line_js = /([ \t]*(\/\/.*)?)$/;
 const var_js = /((var|let|const) +)/;
 const export_js = /(export( default)? +)/;
-const statement_js = /([^;]+?)/;
+const statement_js = /([^;]+?)/;  // maybe also not \n ?
 
 const reg_import_js = new RegExp (`^import (${names.source}|{ *${names.source} *}) from "[\\w.]+";*${end_line_js.source}`, 'mg');
 const reg_func_js = new RegExp (`${start_line_js.source}${export_js.source}?function \\w+\\(${statement_js.source}?\\) *{${end_line_js.source}`, 'mg');
