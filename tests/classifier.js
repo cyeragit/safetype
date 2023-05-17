@@ -812,8 +812,7 @@ test('Javascript Code classify', () => {
       'let year = date.getFullYear();\n' +
       '\n' +
       'const myCar = new Car("Ford", 2014);\n' +
-      'document.getElementById("demo").innerHTML=\n' +
-      '"My car is " + myCar.age(year) + " years old.";\n', 
+      'document.getElementById("demo").innerHTML="My car is " + myCar.age(year) + " years old.";\n', 
       supportedRecognizers, 
       [], 
       new Set()
@@ -822,7 +821,7 @@ test('Javascript Code classify', () => {
     {
       dataType: 'JavaScript Code',
       start: 0,
-      end: 317,
+      end: 316,
       kind: "code",
       value: 
       'class Car {\n' +
@@ -839,8 +838,7 @@ test('Javascript Code classify', () => {
       'let year = date.getFullYear();\n' +
       '\n' +
       'const myCar = new Car("Ford", 2014);\n' +
-      'document.getElementById("demo").innerHTML=\n' +
-      '"My car is " + myCar.age(year) + " years old.";\n'
+      'document.getElementById("demo").innerHTML="My car is " + myCar.age(year) + " years old.";\n'
     },
   ]);
   expect(

@@ -1,23 +1,24 @@
-const THRESHOLD = 0.5;
+const THRESHOLD = 0.6;
 const MIN_MATCHES = 4;
 
 const simple_comment = /(#.*)/;
 const start_line = /^( |\t)*/;
 const multi_comment = /('''(.|[\r\n])*?'''|"""(.|[\r\n])*?""")/;
 const end_line = /(( |\t)*(#.*)?)$/;
-const var_name = /([\w.]+)/;
-const var_names = /([\w.]+)(, ?[\w.]+)*/;
+const name = /([\w.]+)/;
+const names = /([\w.]+)(, ?[\w.]+)*/;
+const var_name = /(\w(\w|\.\w)*(\[.*\](.\w(\w|\.\w)*)?)?)/;
 const statement = /(.+?)/;
 const assign = / *[+\-*\/]?= */;
 
-const reg_import = new RegExp (`^(from [\\w.]+ )?import ${var_names.source}${end_line.source}`, 'mg');
+const reg_import = new RegExp (`^(from [\\w.]+ )?import ${names.source}${end_line.source}`, 'mg');
 const reg_func = new RegExp (`${start_line.source}def \\w+\\(${statement.source}?\\)( *-> *[\\w.\\[\\]:]+)?:${end_line.source}`, 'mg');
 const reg_return = new RegExp (`${start_line.source}(return|yeild)( ${statement.source})?${end_line.source}`, 'mg');
 const reg_cond = new RegExp (`${start_line.source}(if|elif|for|while) *${statement.source}:${end_line.source}`, 'mg');
-const reg_else = new RegExp (`${start_line.source}}else *:${end_line.source}`, 'mg');
+const reg_else = new RegExp (`${start_line.source}else *:${end_line.source}`, 'mg');
 const reg_assign = new RegExp (`${start_line.source}${var_name.source}${assign.source}${statement.source}${end_line.source}`, 'mg');
 const reg_call = new RegExp (`${start_line.source}${var_name.source}\\(${statement.source}?\\)${end_line.source}`, 'mg');
-const reg_class = new RegExp (`${start_line.source}class \\w+(\\(${var_name.source}\\))?:${end_line.source}`, 'mg');
+const reg_class = new RegExp (`${start_line.source}class \\w+(\\(${name.source}\\))?:${end_line.source}`, 'mg');
 const reg_break = new RegExp (`${start_line.source}(break|continue)${end_line.source}`, 'mg');
 const reg_comment = new RegExp (`${start_line.source}${multi_comment.source}${end_line.source}`, 'mg');
 const reg_empty_line = new RegExp (`${start_line.source}${simple_comment.source}?\n`, 'mg');
@@ -32,11 +33,11 @@ const var_js = /((var|let|const) +)/;
 const export_js = /(export( default)? +)/;
 const statement_js = /([^;]+?)/;
 
-const reg_import_js = new RegExp (`^import (${var_names.source}|{ *${var_names.source} *}) from "[\\w.]+";*${end_line_js.source}`, 'mg');
+const reg_import_js = new RegExp (`^import (${names.source}|{ *${names.source} *}) from "[\\w.]+";*${end_line_js.source}`, 'mg');
 const reg_func_js = new RegExp (`${start_line_js.source}${export_js.source}?function \\w+\\(${statement_js.source}?\\) *{${end_line_js.source}`, 'mg');
 const reg_return_js = new RegExp (`${start_line_js.source}return( ${statement_js.source})?;${end_line_js.source}`, 'mg');
 const reg_cond_js = new RegExp (`${start_line_js.source}(if|for|while|(} *)?else if) *\\(${statement_js.source}\\)( *{)?${end_line_js.source}`, 'mg');
-const reg_else_js = new RegExp (`${start_line_js.source}}(} *)?else( *{)?${end_line_js.source}`, 'mg');
+const reg_else_js = new RegExp (`${start_line_js.source}(} *)?else( *{)?${end_line_js.source}`, 'mg');
 const reg_assign_js = new RegExp (`${start_line_js.source}(${export_js.source}?${var_js.source})?${var_name.source}${assign.source}${statement_js.source};${end_line_js.source}`, 'mg');
 const reg_call_js = new RegExp (`${start_line_js.source}${var_name.source}\\(${statement_js.source}?\\) *;${end_line_js.source}`, 'mg');
 const reg_class_js = new RegExp (`${start_line_js.source}class \\w+ *{${end_line_js.source}`, 'mg');
@@ -72,6 +73,7 @@ function isValidCode(patterns, text) {
       united_spans.push([begin, end]);
     }
   }
+  console.log(united_spans);
   let num_detected = united_spans.reduce((sum, [start, end]) => sum + (end - start), 0);
   return num_detected / text.length > THRESHOLD;
 }
