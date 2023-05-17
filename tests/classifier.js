@@ -686,7 +686,7 @@ test('Python Code classify', () => {
       '    result = 0\n' +
       '  return result\n' +
       '\n' +
-      'print("\n\nRecursion Example Results")\n' +
+      'print("Recursion Example Results")\n' +
       'tri_recursion(6)\n',
       supportedRecognizers, 
       [], 
@@ -696,7 +696,7 @@ test('Python Code classify', () => {
     {
       dataType: 'Python Code',
       start: 0,
-      end: 185,
+      end: 183,
       kind: "code",
       value: 
       'def tri_recursion(k):\n' +
@@ -707,7 +707,7 @@ test('Python Code classify', () => {
       '    result = 0\n' +
       '  return result\n' +
       '\n' +
-      'print("\n\nRecursion Example Results")\n' +
+      'print("Recursion Example Results")\n' +
       'tri_recursion(6)\n'
     },
   ]);
