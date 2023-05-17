@@ -8,15 +8,16 @@ const defaults = {
   displayRegexGroupId: 0,
   validationRegexGroupId: 0,
   filterRegexGroupId: 0,
-  minCount: 1, // relevant only for 'code' kind
+  recognizerFunction: null,
 };
 
 if (typeof window === 'undefined') {
-  const utils = require('../src/validators.js');
-  isValidIBANNumber = utils.isValidIBANNumber;
-  isValidPythonCode = utils.isValidPythonCode;
-  isValidJavaScriptCode = utils.isValidJavaScriptCode;
-  mod97 = utils.mod97;
+  const validators = require('../src/validators.js');
+  isValidIBANNumber = validators.isValidIBANNumber;
+  mod97 = validators.mod97;
+  const codeRecognizers = require('../src/code-recognizers.js');
+  isPythonCode = codeRecognizers.isPythonCode;
+  isJavaScriptCode = codeRecognizers.isJavaScriptCode;
 }
 
 const supportedRecognizers = [
@@ -455,33 +456,15 @@ const supportedRecognizers = [
   {
     ...defaults,
     name: 'Python Code',
-    kind: 'code', // 'personal' / 'security' / 'financial' / 'code'
-
-    positiveMatch: new RegExp(
-      `[\\s\\S]+`,
-      'gi'
-    ),
-    validators: [
-      (text) => {
-        return isValidPythonCode(text);
-      },
-    ],
+    kind: 'code',
+    recognizerFunction: isPythonCode,
     anonymous: `MyPythonCode`,
   },
   {
     ...defaults,
     name: 'JavaScript Code',
-    kind: 'code', // 'personal' / 'security' / 'financial' / 'code'
-
-    positiveMatch: new RegExp(
-      `[\\s\\S]+`,
-      'gi'
-    ),
-    validators: [
-      (text) => {
-        return isValidJavaScriptCode(text);
-      },
-    ],
+    kind: 'code',
+    recognizerFunction: isJavaScriptCode,
     anonymous: `MyJavaScriptCode`,
   },
 ];
