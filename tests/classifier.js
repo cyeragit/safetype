@@ -619,6 +619,222 @@ test('Token classify', () => {
     },
   ]);
 });
+test('Python Code classify', () => {
+  expect(
+    classify(
+      'i = 1\n' +
+      'while i < 6:\n' +
+      '  print(i)\n' +
+      '  i += 1\n' +
+      'else:\n' +
+      '  print("i is no longer less than 6")\n',
+      supportedRecognizers, 
+      [], 
+      new Set()
+    )
+  ).toStrictEqual([
+    {
+      dataType: 'Python Code',
+      start: 0,
+      end: 83,
+      value: 
+      'i = 1\n' +
+      'while i < 6:\n' +
+      '  print(i)\n' +
+      '  i += 1\n' +
+      'else:\n' +
+      '  print("i is no longer less than 6")\n'
+    },
+  ]);
+  expect(
+    classify(
+      'def tri_recursion(k):\n' +
+      '  if(k > 0):\n' +
+      '    result = k + tri_recursion(k - 1)\n' +
+      '    print(result)\n' +
+      '  else:\n' +
+      '    result = 0\n' +
+      '  return result\n' +
+      '\n' +
+      'print("\n\nRecursion Example Results")\n' +
+      'tri_recursion(6)\n',
+      supportedRecognizers, 
+      [], 
+      new Set()
+    )
+  ).toStrictEqual([
+    {
+      dataType: 'Python Code',
+      start: 0,
+      end: 185,
+      value: 
+      'def tri_recursion(k):\n' +
+      '  if(k > 0):\n' +
+      '    result = k + tri_recursion(k - 1)\n' +
+      '    print(result)\n' +
+      '  else:\n' +
+      '    result = 0\n' +
+      '  return result\n' +
+      '\n' +
+      'print("\n\nRecursion Example Results")\n' +
+      'tri_recursion(6)\n'
+    },
+  ]);
+  expect(
+    classify(
+      'n = int(input())  # input() function takes input as string type\n' +
+      '# int() converts it to integer type\n' +
+      'fact = 1\n' +
+      'i = 1\n' +
+      'while i <= n:\n' +
+      '    fact = fact * i\n' +
+      '    i = i + 1\n' +
+      'print(fact)', 
+      supportedRecognizers, 
+      [], 
+      new Set()
+    )
+  ).toStrictEqual([
+    {
+      dataType: 'Python Code',
+      start: 0,
+      end: 174,
+      value: 
+      'n = int(input())  # input() function takes input as string type\n' +
+      '# int() converts it to integer type\n' +
+      'fact = 1\n' +
+      'i = 1\n' +
+      'while i <= n:\n' +
+      '    fact = fact * i\n' +
+      '    i = i + 1\n' +
+      'print(fact)'
+    },
+  ]);
+  expect(
+    classify(
+      'def detect(text: str, patterns: list[Pattern]):\n'+
+      '    spans = []\n'+
+      '    x = 1\n'+
+      '    return x\n'+
+      'if x == 3:\n'+
+      '    x += 4\n', 
+      supportedRecognizers, 
+      [], 
+      new Set()
+    )
+  ).toStrictEqual([
+    {
+      dataType: 'Python Code',
+      start: 0,
+      end: 108,
+      value: 
+      'def detect(text: str, patterns: list[Pattern]):\n'+
+      '    spans = []\n'+
+      '    x = 1\n'+
+      '    return x\n'+
+      'if x == 3:\n'+
+      '    x += 4\n'
+    },
+  ]);
+});
+test('Javascript Code classify', () => {
+  expect(
+    classify(
+      'function toCelsius(fahrenheit) {\n' +
+      '  return (5/9) * (fahrenheit-32);\n' +
+      '}\n' +
+      '\n' +
+      'let value = toCelsius;\n', 
+      supportedRecognizers, 
+      [], 
+      new Set()
+    )
+  ).toStrictEqual([
+    {
+      dataType: 'JavaScript Code',
+      start: 0,
+      end: 93,
+      value: 
+      'function toCelsius(fahrenheit) {\n' +
+      '  return (5/9) * (fahrenheit-32);\n' +
+      '}\n' +
+      '\n' +
+      'let value = toCelsius;\n'
+    },
+  ]);
+  expect(
+    classify(
+      'class Car {\n' +
+      '  constructor(name, year) {\n' +
+      '    this.name = name;\n' +
+      '    this.year = year;\n' +
+      '  }\n' +
+      '  age(x) {\n' +
+      '    return x - this.year;\n' +
+      '  }\n' +
+      '}\n' +
+      '\n' +
+      'const date = new Date();\n' +
+      'let year = date.getFullYear();\n' +
+      '\n' +
+      'const myCar = new Car("Ford", 2014);\n' +
+      'document.getElementById("demo").innerHTML=\n' +
+      '"My car is " + myCar.age(year) + " years old.";\n', 
+      supportedRecognizers, 
+      [], 
+      new Set()
+    )
+  ).toStrictEqual([
+    {
+      dataType: 'JavaScript Code',
+      start: 0,
+      end: 317,
+      value: 
+      'class Car {\n' +
+      '  constructor(name, year) {\n' +
+      '    this.name = name;\n' +
+      '    this.year = year;\n' +
+      '  }\n' +
+      '  age(x) {\n' +
+      '    return x - this.year;\n' +
+      '  }\n' +
+      '}\n' +
+      '\n' +
+      'const date = new Date();\n' +
+      'let year = date.getFullYear();\n' +
+      '\n' +
+      'const myCar = new Car("Ford", 2014);\n' +
+      'document.getElementById("demo").innerHTML=\n' +
+      '"My car is " + myCar.age(year) + " years old.";\n'
+    },
+  ]);
+  expect(
+    classify(
+      'let i = 2;\n' +
+      'let len = cars.length;\n' +
+      'let text = "";\n' +
+      'for (; i < len; i++) {\n' +
+      '  text += cars[i] + "<br>";\n' +
+      '}\n', 
+      supportedRecognizers, 
+      [], 
+      new Set()
+    )
+  ).toStrictEqual([
+    {
+      dataType: 'JavaScript Code',
+      start: 0,
+      end: 102,
+      value: 
+      'let i = 2;\n' +
+      'let len = cars.length;\n' +
+      'let text = "";\n' +
+      'for (; i < len; i++) {\n' +
+      '  text += cars[i] + "<br>";\n' +
+      '}\n'
+    },
+  ]);
+});
 
 test('Password in DB Connection String classify', () => {
   expect(

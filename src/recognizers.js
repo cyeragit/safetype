@@ -14,6 +14,8 @@ const defaults = {
 if (typeof window === 'undefined') {
   const utils = require('../src/validators.js');
   isValidIBANNumber = utils.isValidIBANNumber;
+  isValidPythonCode = utils.isValidPythonCode;
+  isValidJavaScriptCode = utils.isValidJavaScriptCode;
   mod97 = utils.mod97;
 }
 
@@ -452,13 +454,35 @@ const supportedRecognizers = [
   },
   {
     ...defaults,
-    name: 'Javascript Code',
-    kind: 'code',
-    minCount: 2,
+    name: 'Python Code',
+    kind: 'code', // 'personal' / 'security' / 'financial' / 'code'
+
     positiveMatch: new RegExp(
-      '([a-zA-Z$_][a-zA-Z0-9$_]*)\\s*=\\s*\\([^)]*\\)\\s*=>',
+      `[\\s\\S]+`,
       'gi'
     ),
+    validators: [
+      (text) => {
+        return isValidPythonCode(text);
+      },
+    ],
+    anonymous: `MyPythonCode`,
+  },
+  {
+    ...defaults,
+    name: 'JavaScript Code',
+    kind: 'code', // 'personal' / 'security' / 'financial' / 'code'
+
+    positiveMatch: new RegExp(
+      `[\\s\\S]+`,
+      'gi'
+    ),
+    validators: [
+      (text) => {
+        return isValidJavaScriptCode(text);
+      },
+    ],
+    anonymous: `MyJavaScriptCode`,
   },
 ];
 if (typeof window === 'undefined') {
