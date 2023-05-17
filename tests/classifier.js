@@ -870,6 +870,73 @@ test('Javascript Code classify', () => {
       '}\n'
     },
   ]);
+  expect(
+    classify(
+      'const THRESHOLD = 0.5;\n' +
+      '\n' +
+      'function detect(text, patterns) {\n' +
+      '  let spans = [];\n' +
+      '  for (let pattern of patterns) {\n' +
+      '    let matches = [...text.matchAll(pattern)];\n' +
+      '    spans.push(...matches.map((m) => [m.index, m.index + m[0].length]));\n' +
+      '  }\n' +
+      '\n' +
+      '  if (spans.length === 0) {\n' +
+      '    return false;\n' +
+      '  }\n' +
+      '\n' +
+      '  let united_spans = [];\n' +
+      '  for (let [begin, end] of spans.sort(([a], [b]) => a - b)) {\n' +
+      '    if (united_spans.length > 0 && united_spans[united_spans.length - 1][1] >= begin - 1) {\n' +
+      '      united_spans[united_spans.length - 1] = [united_spans[united_spans.length - 1][0], end];\n' +
+      '    } else {\n' +
+      '      united_spans.push([begin, end]);\n' +
+      '    }\n' +
+      '  }\n' +
+      '\n' +
+      '  let num_detected = united_spans.reduce((sum, [start, end]) => sum + (end - start), 0);\n' +
+      '\n' +
+      '  return num_detected / text.length > THRESHOLD;\n' +
+      '}\n', 
+      supportedRecognizers, 
+      [], 
+      new Set()
+    )
+  ).toStrictEqual([
+    {
+      dataType: 'JavaScript Code',
+      start: 0,
+      end: 764,
+      kind: "code",
+      value: 
+      'const THRESHOLD = 0.5;\n' +
+      '\n' +
+      'function detect(text, patterns) {\n' +
+      '  let spans = [];\n' +
+      '  for (let pattern of patterns) {\n' +
+      '    let matches = [...text.matchAll(pattern)];\n' +
+      '    spans.push(...matches.map((m) => [m.index, m.index + m[0].length]));\n' +
+      '  }\n' +
+      '\n' +
+      '  if (spans.length === 0) {\n' +
+      '    return false;\n' +
+      '  }\n' +
+      '\n' +
+      '  let united_spans = [];\n' +
+      '  for (let [begin, end] of spans.sort(([a], [b]) => a - b)) {\n' +
+      '    if (united_spans.length > 0 && united_spans[united_spans.length - 1][1] >= begin - 1) {\n' +
+      '      united_spans[united_spans.length - 1] = [united_spans[united_spans.length - 1][0], end];\n' +
+      '    } else {\n' +
+      '      united_spans.push([begin, end]);\n' +
+      '    }\n' +
+      '  }\n' +
+      '\n' +
+      '  let num_detected = united_spans.reduce((sum, [start, end]) => sum + (end - start), 0);\n' +
+      '\n' +
+      '  return num_detected / text.length > THRESHOLD;\n' +
+      '}\n'
+    },
+  ]);
 });
 
 test('Password in DB Connection String classify', () => {

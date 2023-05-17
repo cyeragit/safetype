@@ -55,13 +55,11 @@ function isValidJavaScriptCode(text) {
 }
 
 function isValidCode(patterns, text) {
-  console.log(reg_assign_js);
   let spans = [];
   for (let pattern of patterns) {
     let matches = [...text.matchAll(pattern)];
     spans.push(...matches.map((m) => m.index !== undefined ? [m.index, m.index + m[0].length] : null).filter(Boolean));
   }
-  console.log(spans)
   if (spans.length < MIN_MATCHES) {
     return false;
   }
@@ -74,8 +72,6 @@ function isValidCode(patterns, text) {
       united_spans.push([begin, end]);
     }
   }
-  console.log(united_spans)
-  console.log(text)
   let num_detected = united_spans.reduce((sum, [start, end]) => sum + (end - start), 0);
   return num_detected / text.length > THRESHOLD;
 }
