@@ -774,6 +774,7 @@ test('Javascript Code classify', () => {
   expect(
     classify(
       'function toCelsius(fahrenheit) {\n' +
+      '  const x = (fahrenheit-32);\n' +
       '  return (5/9) * (fahrenheit-32);\n' +
       '}\n' +
       '\n' +
@@ -786,10 +787,11 @@ test('Javascript Code classify', () => {
     {
       dataType: 'JavaScript Code',
       start: 0,
-      end: 93,
+      end: 122,
       kind: "code",
       value: 
       'function toCelsius(fahrenheit) {\n' +
+      '  const x = (fahrenheit-32);\n' +
       '  return (5/9) * (fahrenheit-32);\n' +
       '}\n' +
       '\n' +
@@ -1033,4 +1035,131 @@ test('General Classify FP', () => {
       new Set()
     )
   ).toStrictEqual([]);
+});
+
+test('Javascript Code long classify', () => {
+  expect(
+    classify(
+      `import DbCollection from "./db-collection";
+import IdentityManager from "./identity-manager";
+import cloneDeep from "lodash.clonedeep";
+
+/**
+  Your Mirage server has a database which you can interact with in your route handlers. You’ll typically use models to interact with your database data, but you can always reach into the db directly in the event you want more control.
+
+  Access the db from your route handlers via
+
+  @class Db
+  @constructor
+  @public
+  */
+class Db {
+  constructor(initialData, identityManagers) {
+    this._collections = [];
+
+    this.registerIdentityManagers(identityManagers);
+
+    if (initialData) {
+      this.loadData(initialData);
+    }
+  }
+
+  /**
+    Loads an object of data into Mirage's database.
+
+    The keys of the object correspond to the DbCollections, and the values are arrays of records
+
+    As with , IDs will automatically be created for records that don't have them.
+
+    @method loadData
+    @param {Object} data - Data to load
+    @public
+    */
+  loadData(data) {
+    for (let key in data) {
+      this.createCollection(key, cloneDeep(data[key]));
+    }
+  }
+
+  /**
+   Logs out the contents of the Db.
+
+    @method dump
+    @public
+    */
+  dump() {
+    return this._collections.reduce((data, collection) => {
+      data[collection.name] = collection.all();
+
+      return data;
+    }, {});
+  }
+`, 
+      supportedRecognizers, 
+      [], 
+      new Set()
+    )
+  ).toStrictEqual([
+    {
+      dataType: 'JavaScript Code',
+      start: 0,
+      end: 1342,
+      kind: "code",
+      value: `import DbCollection from "./db-collection";
+import IdentityManager from "./identity-manager";
+import cloneDeep from "lodash.clonedeep";
+
+/**
+  Your Mirage server has a database which you can interact with in your route handlers. You’ll typically use models to interact with your database data, but you can always reach into the db directly in the event you want more control.
+
+  Access the db from your route handlers via
+
+  @class Db
+  @constructor
+  @public
+  */
+class Db {
+  constructor(initialData, identityManagers) {
+    this._collections = [];
+
+    this.registerIdentityManagers(identityManagers);
+
+    if (initialData) {
+      this.loadData(initialData);
+    }
+  }
+
+  /**
+    Loads an object of data into Mirage's database.
+
+    The keys of the object correspond to the DbCollections, and the values are arrays of records
+
+    As with , IDs will automatically be created for records that don't have them.
+
+    @method loadData
+    @param {Object} data - Data to load
+    @public
+    */
+  loadData(data) {
+    for (let key in data) {
+      this.createCollection(key, cloneDeep(data[key]));
+    }
+  }
+
+  /**
+   Logs out the contents of the Db.
+
+    @method dump
+    @public
+    */
+  dump() {
+    return this._collections.reduce((data, collection) => {
+      data[collection.name] = collection.all();
+
+      return data;
+    }, {});
+  }
+`
+    },
+  ]);
 });
