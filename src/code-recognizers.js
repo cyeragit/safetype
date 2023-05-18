@@ -2,17 +2,18 @@
 const THRESHOLD = 0.6;
 const MIN_MATCHES = 4;
 
-const name = /([\w.]+)/;
+const name = /([\w.]{1,30})/;
 const names = /([\w.]+)(, ?[\w.]+)*/;
-const var_name = /(\w(\w|\.\w)*(\[.*\](.\w(\w|\.\w)*)?)?)/;
-const assign = / *[+\-*\/]?= */;  // FN `a(x).b = 1`
+const var_name = /(\w(\.?\w)*(\[.*\](.\w(\.?\w)*)?)?)/;
+const assign = /[ \t]*[+\-*\/]?= */;  // FN `a(x).b = 1`
 
 //python
 const simple_comment = /(#.*)/;
-const start_line = /^( |\t)*/;
+const start_line = /^[ \t]{0,30}?/;
 const multi_comment = /('''(.|[\r\n])*?'''|"""(.|[\r\n])*?""")/;
-const end_line = /(( |\t)*(#.*)?)$/;
+const end_line = /([ \t]{0,30}(#.*)?)$/;
 const statement = /(.+?)/;
+
 
 const pat_import = {regex: new RegExp (`^(from [\\w.]+ )?import ${names.source}${end_line.source}`, 'mg'), count: true};
 const pat_func = {regex: new RegExp (`${start_line.source}def \\w+\\(${statement.source}?\\)( *-> *[\\w.\\[\\]:]+)?:${end_line.source}`, 'mg'), count: true};
@@ -21,7 +22,7 @@ const pat_cond = {regex: new RegExp (`${start_line.source}(if|elif|for|while) *$
 const pat_else = {regex: new RegExp (`${start_line.source}else *:${end_line.source}`, 'mg'), count: true};
 const pat_assign = {regex: new RegExp (`${start_line.source}${var_name.source}${assign.source}${statement.source}${end_line.source}`, 'mg'), count: true};
 const pat_call = {regex: new RegExp (`${start_line.source}${var_name.source}\\(${statement.source}?\\)${end_line.source}`, 'mg'), count: true};
-const pat_class = {regex: new RegExp (`${start_line.source}class \\w+(\\(${name.source}\\))?:${end_line.source}`, 'mg'), count: true};
+const pat_class = {regex: new RegExp (`$class \\w+(\\(${name.source}\\))?:${end_line.source}`, 'mg'), count: true};
 const pat_break = {regex: new RegExp (`${start_line.source}(break|continue)${end_line.source}`, 'mg'), count: true};
 const pat_comment = {regex: new RegExp (`${start_line.source}${multi_comment.source}${end_line.source}`, 'mg'), count: false};
 const pat_empty_line = {regex: new RegExp (`${start_line.source}${simple_comment.source}?$`, 'mg'), count: false};
