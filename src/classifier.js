@@ -1,5 +1,6 @@
 if (typeof window === 'undefined') {
   const utils = require('../src/utils.js');
+  unescapeHtml = utils.unescapeHtml;
   sliceStringFromLastDelimiter = utils.sliceStringFromLastDelimiter;
   sliceStringUpToFirstDelimiter = utils.sliceStringUpToFirstDelimiter;
 }
@@ -9,14 +10,37 @@ const classifyCache = {
   lastResult: null,
 };
 
-function classify(newText, supportedRecognizers, disabledTypes, ignored) {
+function classify(
+  newText,
+  supportedRecognizers,
+  disabledTypes,
+  ignored,
+  codeIgnored = false
+) {
   let matchesArray = [];
   for (const recognizer of supportedRecognizers) {
     if (disabledTypes.includes(recognizer.name)) {
       continue;
     }
+    if (recognizer.recognizerFunction) {
+      if (codeIgnored) {
+        continue;
+      }
+      if (recognizer.recognizerFunction(newText)) {
+        matchesArray.push({
+          start: 0,
+          end: newText.length,
+          kind: recognizer.kind,
+          dataType: recognizer.name,
+          value: newText,
+        });
+      }
+      continue;
+    }
+
     const regex = recognizer.positiveMatch;
     regex.lastIndex = 0;
+
     const matches = [...newText.matchAll(regex)];
 
     for (const match of matches) {
@@ -133,6 +157,7 @@ function classify(newText, supportedRecognizers, disabledTypes, ignored) {
         matchesArray.push({
           start,
           end,
+          kind: recognizer.kind,
           dataType: recognizer.name,
           value: matchedString,
         });
@@ -169,6 +194,7 @@ function wrappedClassify(newText) {
   const cacheKey = JSON.stringify({
     newText,
     disabledTypes,
+    codeIgnored: page.codeIgnored,
     ignored: Array.from(page.ignored),
   });
   if (classifyCache.lastKey === cacheKey) {
@@ -179,7 +205,8 @@ function wrappedClassify(newText) {
     newText,
     supportedRecognizers,
     disabledTypes,
-    page.ignored
+    page.ignored,
+    page.codeIgnored
   );
   classifyCache.lastKey = cacheKey;
   classifyCache.lastResult = matchesArray;
