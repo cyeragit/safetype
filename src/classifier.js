@@ -22,22 +22,26 @@ function classify(
     if (disabledTypes.includes(recognizer.name)) {
       continue;
     }
-    const regex = recognizer.positiveMatch;
-    regex.lastIndex = 0;
-    if (recognizer.kind === 'code') {
+    if (recognizer.recognizerFunction) {
       if (codeIgnored) {
         continue;
       }
-      newText = unescapeHtml(newText);
-    }
-    const matches = [...newText.matchAll(regex)];
-
-    if (
-      recognizer.minCount !== undefined &&
-      matches.length < recognizer.minCount
-    ) {
+      if (recognizer.recognizerFunction(newText)) {
+        matchesArray.push({
+          start: 0,
+          end: newText.length,
+          kind: recognizer.kind,
+          dataType: recognizer.name,
+          value: newText,
+        });
+      }
       continue;
     }
+
+    const regex = recognizer.positiveMatch;
+    regex.lastIndex = 0;
+
+    const matches = [...newText.matchAll(regex)];
 
     for (const match of matches) {
       if (

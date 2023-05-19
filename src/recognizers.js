@@ -8,13 +8,16 @@ const defaults = {
   displayRegexGroupId: 0,
   validationRegexGroupId: 0,
   filterRegexGroupId: 0,
-  minCount: 1, // relevant only for 'code' kind
+  recognizerFunction: null,
 };
 
 if (typeof window === 'undefined') {
-  const utils = require('../src/validators.js');
-  isValidIBANNumber = utils.isValidIBANNumber;
-  mod97 = utils.mod97;
+  const validators = require('../src/validators.js');
+  isValidIBANNumber = validators.isValidIBANNumber;
+  mod97 = validators.mod97;
+  const codeRecognizers = require('../src/code-recognizers.js');
+  isPythonCode = codeRecognizers.isPythonCode;
+  isJavaScriptCode = codeRecognizers.isJavaScriptCode;
 }
 
 const supportedRecognizers = [
@@ -452,13 +455,17 @@ const supportedRecognizers = [
   },
   {
     ...defaults,
-    name: 'Javascript Code',
+    name: 'Python Code',
     kind: 'code',
-    minCount: 2,
-    positiveMatch: new RegExp(
-      '([a-zA-Z$_][a-zA-Z0-9$_]*)\\s*=\\s*\\([^)]*\\)\\s*=>',
-      'gi'
-    ),
+    recognizerFunction: isPythonCode,
+    anonymous: `MyPythonCode`,
+  },
+  {
+    ...defaults,
+    name: 'JavaScript Code',
+    kind: 'code',
+    recognizerFunction: isJavaScriptCode,
+    anonymous: `MyJavaScriptCode`,
   },
 ];
 if (typeof window === 'undefined') {
