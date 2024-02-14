@@ -31,6 +31,23 @@ function escapeHtml(str) {
   });
 }
 
+function unescapeHtml(str) {
+  return str.replace(/(&amp;|&lt;|&gt;|&#x2F;)/g, function (char) {
+    switch (char) {
+      case '&amp;':
+        return '&';
+      case '&lt;':
+        return '<';
+      case '&gt;':
+        return '>';
+      case '&#x2F;':
+        return '/';
+      default:
+        return char;
+    }
+  });
+}
+
 function replaceAll(str, search, replacement) {
   return str.replace(new RegExp(search, 'g'), replacement);
 }
@@ -310,5 +327,6 @@ if (typeof window === 'undefined') {
   module.exports = {
     sliceStringFromLastDelimiter,
     sliceStringUpToFirstDelimiter,
+    unescapeHtml,
   };
 }

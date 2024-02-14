@@ -28,7 +28,9 @@
         "src/handlers.js",
         "src/browser-settings.js",
         "src/validators.js",
+        "src/code-recognizers.js",
         "src/recognizers.js",
+        "src/code-recognizers.js",
         "src/classifier.js",
         "src/elements.js",
         "src/main.js"

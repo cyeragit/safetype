@@ -58,17 +58,30 @@ const safetypeMainTooltipHtml = `
         </div>
     </div>
     <div id="problemsStatus" style="padding: 20px 16px">
-        <div style="color: #464646; font-size: 14px; line-height: 22px; font-weight: 400; cursor:text;">
+        <div id="regularIssueDescribe" style="color: #464646; font-size: 14px; line-height: 22px; font-weight: 400; cursor:text;">
             <span id="currentIssueText" style="${getStyle(
               styles.currentIssueText
             )}">This instance</span>&nbsp; is considered sensitive data as it is classified as</div>
-        <div style="display: inline-flex;">
+        <div id="regularIssueDataType" style="display: inline-flex;">
             <div style="${getStyle(styles.dataTag)}">
                 <div style="width: 8px; height: 8px; background: #FF08C2; border-radius: 2px;"></div>
                 <div id="currentIssueDataType" style="${getStyle(
                   styles.tooltipCurrTitle
                 )}">Classified data</div>
             </div>
+        </div>
+        <div id="codeIssueDescribe" style="color: #464646; font-size: 14px; line-height: 22px; font-weight: 400; cursor:text;">
+            We Identified
+            <div style="display: inline-flex;">
+                <div style="${getStyle(styles.dataTag)}">
+                    <div style="width: 8px; height: 8px; background: #7C39ED; border-radius: 2px;"></div>
+                    <div id="currentCodeIssueDataType" style="${getStyle(
+                      styles.tooltipCurrTitle
+                    )}">Code</div>
+                </div>
+            </div>
+             in the submitted text. <br />
+             Please ensure proper handling of potentially proprietary code.
         </div>
         <div style="margin-top:24px; display: flex; flex-direction: row; justify-content: space-between; align-items: center">
             <div style="display: flex; flex-direction: row; align-items: center; gap:12px">
