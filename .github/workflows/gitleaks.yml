@@ -1,0 +1,54 @@
+---
+name: Gitleaks
+
+# Secret scanning for this repository. Standardized across the cyeragit org by
+# the devops `gitleaks-standardization` workflow. Uses the gitleaks CLI (no
+# license required) to match the local .githooks/pre-commit hook.
+
+# "on" is quoted so YAML 1.1 linters don't read it as the boolean `on`.
+"on":
+  pull_request:
+  push:
+    branches: [main, master, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GITLEAKS_VERSION: "8.21.2"
+
+jobs:
+  gitleaks:
+    name: Scan for secrets
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+        with:
+          # Full history so pushes can be scanned across their commit range.
+          fetch-depth: 0
+
+      - name: Install gitleaks
+        env:
+          GH_URL: https://github.com/gitleaks/gitleaks/releases/download
+        run: |
+          tarball="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -sSfL "${GH_URL}/v${GITLEAKS_VERSION}/${tarball}" \
+            | tar -xz -C /usr/local/bin gitleaks
+          gitleaks version
+
+      - name: Scan pull request range
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          gitleaks git \
+            --log-opts="${BASE_SHA}..${HEAD_SHA}" \
+            --no-banner --redact --verbose
+
+      - name: Scan full history
+        if: github.event_name != 'pull_request'
+        run: gitleaks git --no-banner --redact --verbose
