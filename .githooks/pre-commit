@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# =============================================================================
+# Gitleaks Secret Detection
+# =============================================================================
+# Scans staged files for hardcoded secrets (API keys, passwords, tokens, etc.).
+#
+# Standardized across the cyeragit org by the devops `gitleaks-standardization`
+# workflow. Enable it locally with:
+#
+#     git config --local include.path ../.gitconfig
+#
+# (this wires core.hooksPath = .githooks from the committed .gitconfig).
+
+run_gitleaks_check() {
+  # Check if gitleaks is installed
+  if ! command -v gitleaks &>/dev/null; then
+    echo ""
+    echo "💡 gitleaks is not installed - secret scanning skipped"
+    echo ""
+    echo "   To enable secret detection, install gitleaks:"
+    echo "     macOS:   brew install gitleaks"
+    echo "     Linux:   https://github.com/gitleaks/gitleaks#installing"
+    echo ""
+    return 0  # Don't block commit if gitleaks isn't installed
+  fi
+
+  # Run gitleaks on staged files
+  local gitleaks_output
+  gitleaks_output=$(gitleaks git --pre-commit --staged --no-banner --redact --verbose 2>&1)
+  local gitleaks_exit=$?
+
+  if [ $gitleaks_exit -eq 0 ]; then
+    # No secrets found
+    return 0
+  else
+    # Secrets detected or error - block the commit
+    echo ""
+    echo "🚨 SECRETS DETECTED - commit blocked"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "$gitleaks_output"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "Please remove the secrets before committing."
+    echo ""
+    echo "Options:"
+    echo "  1. Add fingerprint to .gitleaksignore (preferred for templates/examples)"
+    echo "     → Copy the 'Fingerprint:' value and add it to .gitleaksignore"
+    echo "  2. Remove the secret from your code"
+    echo "  3. Use environment variables or a secrets manager"
+    echo "  4. Add to .gitignore if it's a config file"
+    echo ""
+    return 1
+  fi
+}
+
+# Run gitleaks check
+if ! run_gitleaks_check; then
+  exit 1
+fi
+
+exit 0

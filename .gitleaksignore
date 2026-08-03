@@ -1,0 +1,13 @@
+# This file contains false positives for gitleaks secret scanning
+# Format: file:rule:line (the "Fingerprint:" value gitleaks prints for a finding)
+#
+# Add an entry only for a confirmed false positive (test fixture, example config,
+# public key, etc.). Document each with a short reason so reviewers understand why
+# it is safe to ignore:
+#
+#   # <filename>
+#   #   [Category] Reason this is safe to ignore
+#   <file>:<rule>:<line>
+#
+# Keep entries line-pinned so a real secret added later on the same file/rule is
+# still caught.

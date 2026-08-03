@@ -1,0 +1,14 @@
+---
+# Added alongside the gitleaks protection. Its only job is to stop YAML linters
+# from parsing the pre-commit hook (a bash script, not YAML) and from flagging
+# GitHub Actions' `on:` key. It keeps yamllint's default rules otherwise.
+extends: default
+
+# .githooks/pre-commit is a shell script; never lint it as YAML.
+ignore: |
+  .githooks/
+
+rules:
+  # GitHub Actions uses `on:`, which YAML 1.1 linters read as the boolean `on`.
+  truthy:
+    check-keys: false
